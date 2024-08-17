@@ -41,4 +41,4 @@ Think about guiding refactoring-work in your regular/project teams. Think of the
 You have seen a few workflows in this repository. They are quality-gates to prevent duplication, control complexity and prove functionality. Do you think some of them have potential to guide code-improvements in your team? **yes**
 
 During the next four weeks, what improvement do you plan in your code-quality practice? (in your regular work, not in this repository!)
-**Will start implementing unit testing for all components and work on modularity and will create custom safety net for the project development**
+**Will start implementing unit test for all components and work on modularity and will create custom safety net for the project development**
