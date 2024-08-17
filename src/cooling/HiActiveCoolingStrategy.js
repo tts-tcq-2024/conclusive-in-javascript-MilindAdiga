@@ -1,5 +1,3 @@
-// HiActiveCoolingStrategy.js
-
 const CoolingTypeStrategy = require('./CoolingTypeStrategy');
 
 class HiActiveCoolingStrategy extends CoolingTypeStrategy {
