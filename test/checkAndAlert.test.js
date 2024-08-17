@@ -1,63 +1,47 @@
-const { expect } = require('chai');
+const {expect} = require('chai');
 const sinon = require('sinon');
-const typewiseAlert = require('../src/typewisealert');
-const EmailAlertStrategy = require('../src/alert/EmailAlertStrategy');
-const ControllerAlertStrategy = require('../src/alert/ControllerAlertStrategy');
-const CoolingTypeStrategy = require('../src/cooling/CoolingTypeStrategy');
+const alerts = require('../src/typewisealert');
 
-describe('Check and Alert', function () {
-  let emailAlertSpy, controllerAlertSpy;
+describe('Alert System Tests', () => {
+  let consoleSpy;
 
   beforeEach(() => {
-    emailAlertSpy = sinon.spy(EmailAlertStrategy.prototype, 'sendAlert');
-    controllerAlertSpy = sinon.spy(ControllerAlertStrategy.prototype, 'sendAlert');
+    consoleSpy = sinon.spy(console, 'log');
   });
 
   afterEach(() => {
-    emailAlertSpy.restore();
-    controllerAlertSpy.restore();
+    consoleSpy.restore();
   });
 
-  it('should trigger email alert when breach is detected', function () {
-    const coolingType = new CoolingTypeStrategy('PASSIVE_COOLING');
-    const breachType = coolingType.classifyTemperature(50);
-
-    typewiseAlert.checkAndAlert(new EmailAlertStrategy(), { coolingType: 'PASSIVE_COOLING' }, 50);
-
-    expect(emailAlertSpy.calledOnce).to.be.true;
-    expect(emailAlertSpy.calledWith('TOO_HIGH')).to.be.true;
-    expect(breachType).to.equal('TOO_HIGH');
+  it('sends alert to controller for TOO_HIGH temperature in Hi Active Cooling', () => {
+    const batteryChar = {coolingType: 'HI_ACTIVE_COOLING'};
+    alerts.checkAndAlert('TO_CONTROLLER', batteryChar, 46);
+    expect(consoleSpy.calledWith('65261, TOO_HIGH')).to.be.true;
   });
 
-  it('should trigger controller alert when breach is detected', function () {
-    const coolingType = new CoolingTypeStrategy('HI_ACTIVE_COOLING');
-    const breachType = coolingType.classifyTemperature(100); 
-
-    typewiseAlert.checkAndAlert(new ControllerAlertStrategy(), { coolingType: 'HI_ACTIVE_COOLING' }, 100);
-
-    expect(controllerAlertSpy.calledOnce).to.be.true;
-    expect(controllerAlertSpy.calledWith('TOO_HIGH')).to.be.true;
-    expect(breachType).to.equal('TOO_HIGH');
+  it('sends alert to controller for NORMAL temperature in Hi Active Cooling', () => {
+    const batteryChar = {coolingType: 'HI_ACTIVE_COOLING'};
+    alerts.checkAndAlert('TO_CONTROLLER', batteryChar, 40);
+    expect(consoleSpy.calledWith('65261, NORMAL')).to.be.true;
   });
 
-  it('should not trigger alert when temperature is normal', function () {
-    const coolingType = new CoolingTypeStrategy('PASSIVE_COOLING');
-    const breachType = coolingType.classifyTemperature(20); 
-
-    typewiseAlert.checkAndAlert(new EmailAlertStrategy(), { coolingType: 'PASSIVE_COOLING' }, 20);
-
-    expect(emailAlertSpy.notCalled).to.be.true;
-    expect(breachType).to.equal('NORMAL');
+  it('sends email alert for TOO_LOW temperature in Passive Cooling', () => {
+    const batteryChar = {coolingType: 'PASSIVE_COOLING'};
+    alerts.checkAndAlert('TO_EMAIL', batteryChar, -5);
+    expect(consoleSpy.calledWith('To: a.b@c.com')).to.be.true;
+    expect(consoleSpy.calledWith('Hi, the temperature is too low')).to.be.true;
   });
 
-  it('should classify temperature as TOO_LOW when temperature is below the minimum limit', function () {
-    const coolingType = new CoolingTypeStrategy('HI_ACTIVE_COOLING');
-    const breachType = coolingType.classifyTemperature(-10);
+  it('sends email alert for TOO_HIGH temperature in Passive Cooling', () => {
+    const batteryChar = {coolingType: 'PASSIVE_COOLING'};
+    alerts.checkAndAlert('TO_EMAIL', batteryChar, 36);
+    expect(consoleSpy.calledWith('To: a.b@c.com')).to.be.true;
+    expect(consoleSpy.calledWith('Hi, the temperature is too high')).to.be.true;
+  });
 
-    typewiseAlert.checkAndAlert(new ControllerAlertStrategy(), { coolingType: 'HI_ACTIVE_COOLING' }, -10);
-
-    expect(controllerAlertSpy.calledOnce).to.be.true;
-    expect(controllerAlertSpy.calledWith('TOO_LOW')).to.be.true;
-    expect(breachType).to.equal('TOO_LOW');
+  it('sends alert to controller for NORMAL temperature in Med Active Cooling', () => {
+    const batteryChar = {coolingType: 'MED_ACTIVE_COOLING'};
+    alerts.checkAndAlert('TO_CONTROLLER', batteryChar, 30);
+    expect(consoleSpy.calledWith('65261, NORMAL')).to.be.true;
   });
 });
