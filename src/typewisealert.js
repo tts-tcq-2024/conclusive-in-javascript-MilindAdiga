@@ -4,17 +4,18 @@ const MedActiveCoolingStrategy = require('./cooling/MedActiveCoolingStrategy');
 const ControllerAlertStrategy = require('./alerts/ControllerAlertStrategy');
 const EmailAlertStrategy = require('./alerts/EmailAlertStrategy');
 
+const coolingStrategies = {
+  'PASSIVE_COOLING': PassiveCoolingStrategy,
+  'HI_ACTIVE_COOLING': HiActiveCoolingStrategy,
+  'MED_ACTIVE_COOLING': MedActiveCoolingStrategy,
+};
+
 function getCoolingStrategy(coolingType) {
-  switch(coolingType) {
-    case 'PASSIVE_COOLING':
-      return new PassiveCoolingStrategy();
-    case 'HI_ACTIVE_COOLING':
-      return new HiActiveCoolingStrategy();
-    case 'MED_ACTIVE_COOLING':
-      return new MedActiveCoolingStrategy();
-    default:
-      throw new Error('Unknown cooling type');
+  const StrategyClass = coolingStrategies[coolingType];
+  if (!StrategyClass) {
+    throw new Error('Unknown cooling type');
   }
+  return new StrategyClass();
 }
 
 function getAlertStrategy(alertTarget) {
