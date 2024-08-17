@@ -49,4 +49,8 @@ describe('Cooling Type Strategy Tests', () => {
     const medActiveCooling = new MedActiveCoolingStrategy();
     expect(medActiveCooling.classifyTemperature(35)).to.equal('NORMAL');
   });
+
+  it('infers a value lower than the minimum as TOO_LOW', () => {
+  expect(alerts.inferBreach(20, 50, 100)).equals('TOO_LOW');
+});
 });
