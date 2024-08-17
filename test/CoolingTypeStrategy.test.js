@@ -2,7 +2,6 @@ const {expect} = require('chai');
 const PassiveCoolingStrategy = require('../src/cooling/PassiveCoolingStrategy');
 const HiActiveCoolingStrategy = require('../src/cooling/HiActiveCoolingStrategy');
 const MedActiveCoolingStrategy = require('../src/cooling/MedActiveCoolingStrategy');
-const alerts = require('../src/typewisealert');
 
 describe('Cooling Type Strategy Tests', () => {
   it('infers TOO_LOW for Passive Cooling when temperature is lower than the minimum', () => {
