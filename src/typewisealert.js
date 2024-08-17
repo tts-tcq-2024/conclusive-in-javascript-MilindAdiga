@@ -1,8 +1,8 @@
 const PassiveCoolingStrategy = require('./cooling/PassiveCoolingStrategy');
 const HiActiveCoolingStrategy = require('./cooling/HiActiveCoolingStrategy');
 const MedActiveCoolingStrategy = require('./cooling/MedActiveCoolingStrategy');
-const ControllerAlertStrategy = require('./alerts/ControllerAlertStrategy');
-const EmailAlertStrategy = require('./alerts/EmailAlertStrategy');
+const ControllerAlertStrategy = require('./alert/ControllerAlertStrategy');
+const EmailAlertStrategy = require('./alert/EmailAlertStrategy');
 
 const coolingStrategies = {
   'PASSIVE_COOLING': PassiveCoolingStrategy,
