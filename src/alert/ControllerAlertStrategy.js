@@ -1,6 +1,4 @@
-const AlertStrategy = require('./AlertStrategy');
-
-class ControllerAlertStrategy extends AlertStrategy {
+class ControllerAlertStrategy {
   sendAlert(breachType) {
     const header = 0xfeed;
     console.log(`${header}, ${breachType}`);
